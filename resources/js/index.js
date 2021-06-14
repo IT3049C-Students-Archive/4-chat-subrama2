@@ -2,12 +2,13 @@ const nameInput = document.getElementById("my-name-input");
 const myMessage = document.getElementById("myMessage");
 const sendButton = document.getElementById("sendButton");
 const chatBox = document.getElementById("chat");
-async function updateMessagesInChatBox() {
+  async  function updateMessagesInChatBox() {
 
   const serverURL = `https://it3049c-chat-application.herokuapp.com/messages`;
 function fetchMessages() {
   return fetch(serverURL)
-    .then(Response => Response.json())
+  .then( response => response.json())
+
 }
   const messages = await fetchMessages();
 
@@ -18,37 +19,34 @@ function fetchMessages() {
     if (myNameInput === message.sender) {
       return
       <div class="mine messages">
-        <div class="message">
-        ${message.text}
-
-
-        </div>
-        <div class="sender-info">
-        ${formattedTime}
-      </div>
-      </div>
+             <div class="message">
+                 ${message.text}
+             </div>
+             <div class="sender-info">
+                 ${formattedTime}
+             </div>
+         </div>
     } else {
       return
-      <div class = "yours messages">
-        <div class="message">
-          ${message.text}
+      <div class="yours messages">
+         <div class="message">
+           ${message.text}
+         </div>
+         <div class="sender-info">
+            ${message.sender} ${formattedTime}
+          </div>
         </div>
-        <div class="sender-info">
-          ${message.sender} ${formattedTime}
-        </div>
-      </div>
     }
   
   }
   let formattedMessages = "";
   messages.forEach(message => {
     formattedMessages += formatMessage(message, nameInput.value);
-  });
+   });
   chatBox.innerHTML = formattedMessages;
 
 }
 const MILLISECONDS_IN_TEN_SECONDS = 10000;
-
 setInterval(updateMessagesInChatBox,MILLISECONDS_IN_TEN_SECONDS);
 function sendMessages (username, text) {
   const newMessage = {
@@ -60,19 +58,17 @@ function sendMessages (username, text) {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
-
     },
     body: JSON.stringify(newMessage)
   });
-
-  sendButton.addEventListener("click", function(sendButtonClickEvent) {
-    sendButtonClickEvent.preventDefault();
-    const sender = nameInput.value;
-    const message = myMessage.value;
-
-    sendMessages(sender, message);
-    myMessage.value = "";
-  })
-  updateMessagesInChatBox()
 }
+sendButton.addEventListener("click", function(sendButtonClickEvent) {
+  sendButtonClickEvent.preventDefault();
+  const sender = nameInput.value;
+  const message = myMessage.value;
+
+  sendMessages(sender,message);
+  myMessage.value = "";
+});
+
 
